@@ -364,6 +364,12 @@ function playAudio(url) {
         var myMedia = new Media("audio/beer.mp3")
         myMedia.play()  // first looks for file in www/audio/beer.mp3 then in <application>/documents/tmp/audio/beer.mp3
 
+- __automaticallyWaitsToMinimizeStalling__:  The default setting is to disable automatic waits for buffering as this caused "excessive" buffering times on some devices. But in other cases it may be beneficial to enable it. For this pass the boolean option `automaticallyWaitsToMinimizeStalling` to the `play` method to explicitly set it to `true`, e.g.:
+
+        var myMedia = new Media("http://live.antenne.at/arr");
+        myMedia.play({ automaticallyWaitsToMinimizeStalling : true });
+
+
 ## media.release
 
 Releases the underlying operating system's audio resources.
