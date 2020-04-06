@@ -381,6 +381,15 @@ BOOL keepAvAudioSessionAlwaysActive = NO;
             if (!bError) {
                 NSLog(@"Playing audio sample '%@'", audioFile.resourcePath);
                 double duration = 0;
+
+                BOOL isSlowBufferTriggering = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){10,0,0}];
+                BOOL enableBuffering = options != nil && [options objectForKey:@"automaticallyWaitsToMinimizeStalling"];
+
+                if (isSlowBufferTriggering) {
+                    NSLog(@"%s buffered playing (automaticallyWaitsToMinimizeStalling)", enableBuffering ? "Enable" : "Disable");
+                    avPlayer.automaticallyWaitsToMinimizeStalling = enableBuffering;
+                }
+
                 if (avPlayer.currentItem && avPlayer.currentItem.asset) {
                     CMTime time = avPlayer.currentItem.asset.duration;
                     duration = CMTimeGetSeconds(time);
@@ -399,7 +408,6 @@ BOOL keepAvAudioSessionAlwaysActive = NO;
                     }
 
                 } else {
-
                     NSNumber* loopOption = [options objectForKey:@"numberOfLoops"];
                     NSInteger numberOfLoops = 0;
                     if (loopOption != nil) {
